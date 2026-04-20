@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Anatomía del Valor p y Pruebas Estadísticas</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        h1, h2, h3, .serif-text { font-family: 'Merriweather', serif; }
+        
+        .math-box {
+            background-color: #ffffff;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        }
+
+        .highlight-text {
+            background: linear-gradient(120deg, #dbeafe 0%, #dbeafe 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 80%;
+        }
+
+        /* Styles for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 1rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12">
+
+    <!-- HEADER -->
+    <header class="gradient-bg text-white py-16 px-6 relative overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="max-w-5xl mx-auto relative z-10">
+            <div class="inline-flex items-center bg-blue-500/30 border border-blue-400/50 rounded-full px-4 py-1 text-sm font-semibold mb-6">
+                <i class="fas fa-microscope mr-2"></i> Estadística Inferencial Avanzada
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">La Anatomía del Valor <span class="italic font-serif text-blue-300">p</span> y Pruebas Estadísticas</h1>
+            <p class="text-xl text-blue-100 max-w-3xl leading-relaxed">
+                Cómo los investigadores demuestran matemáticamente que sus descubrimientos no son obra del azar y eligen la prueba adecuada.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 -mt-8 relative z-20">
+        
+        <!-- INTRODUCCIÓN Y MITOS -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">1. La Premisa: El Juicio a la Hipótesis Nula (\(H_0\))</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        El cálculo del valor <span class="italic">p</span> opera bajo una lógica de <strong class="text-slate-800">reducción al absurdo</strong>. Para probar que una intervención funciona (Hipótesis Alternativa \(H_A\)), el modelo matemático asume primero que <strong>no hay ningún efecto</strong> (Hipótesis Nula \(H_0\)).
+                    </p>
+                    <div class="math-box p-4 rounded-lg mt-4 text-center">
+                        <span class="text-slate-500 text-sm mb-2 block">Asunción Inicial:</span>
+                        <div class="text-xl">
+                            $$H_0 : \mu_{experimental} = \mu_{control}$$
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-red-50 rounded-xl p-6 border border-red-100">
+                    <h3 class="font-bold text-red-800 flex items-center mb-3">
+                        <i class="fas fa-skull-crossbones mr-2"></i> El Gran Mito (Leedy & Ormrod)
+                    </h3>
+                    <p class="text-sm text-red-900 mb-2"><strong>FALSO:</strong> "El valor <i>p</i> es la probabilidad de que los resultados sean producto del azar."</p>
+                    <p class="text-sm text-red-900"><strong>FALSO:</strong> "El valor <i>p</i> indica si mi hipótesis de investigación es cierta."</p>
+                    <hr class="border-red-200 my-3">
+                    <p class="text-sm text-green-800 font-semibold mt-2">
+                        <i class="fas fa-check-circle mr-1"></i> VERDADERO: Es la probabilidad de observar nuestros datos, asumiendo que \(H_0\) fuera 100% cierta en el universo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- EL CÁLCULO PASO A PASO -->
+        <h2 class="text-3xl font-bold text-slate-800 mb-8 text-center">2. Los 3 Pasos del Cálculo (La Matemática del Descubrimiento)</h2>
+
+        <div class="space-y-8 mb-12">
+            
+            <!-- Paso 1 -->
+            <div class="bg-white rounded-xl shadow-md p-8 border-l-4 border-blue-500 flex flex-col md:flex-row gap-8 items-center">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">1</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Medir el "Ruido" (Error Estándar)</h3>
+                    <p class="text-slate-600 text-sm mb-4">Antes de buscar diferencias, calculamos la dispersión natural del sistema si tomáramos infinitas muestras. A mayor muestra (\(n\)), menor ruido.</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 min-w-[250px] text-center">
+                    $$SE = \frac{s}{\sqrt{n}}$$
+                    <span class="text-xs text-slate-400">s = desviación estándar, n = muestra</span>
+                </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="bg-white rounded-xl shadow-md p-8 border-l-4 border-amber-500 flex flex-col md:flex-row gap-8 items-center">
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">2</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Relación Señal/Ruido (Estadístico de Prueba)</h3>
+                    <p class="text-slate-600 text-sm mb-4">Comparamos la magnitud de nuestro hallazgo (Señal) contra la varianza natural (Ruido). Fórmulas como la prueba \(t\) de Student o \(Z\) hacen esto.</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 min-w-[250px] text-center">
+                    $$t = \frac{\bar{x}_1 - \bar{x}_2}{SE_{combinado}}$$
+                    <span class="text-xs text-slate-400">Señal observada sobre el Ruido esperado</span>
+                </div>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="bg-slate-900 text-white rounded-xl shadow-2xl p-8 border-l-4 border-purple-500 flex flex-col md:flex-row gap-8 items-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-purple-500/20 text-purple-400 border border-purple-500/50 rounded-full flex items-center justify-center text-2xl font-bold shrink-0 z-10">3</div>
+                <div class="flex-1 z-10">
+                    <h3 class="text-xl font-bold text-white mb-2">Integrar el Área (Obtener el Valor p)</h3>
+                    <p class="text-slate-300 text-sm mb-4">El estadístico (ej. \(t = 2.5\)) se proyecta en una curva de probabilidad (Campana de Gauss). El valor \(p\) es la integral geométrica del área restante en las colas.</p>
+                </div>
+                <div class="bg-black/50 p-4 rounded-lg border border-slate-700 min-w-[250px] text-center z-10">
+                    <div class="text-purple-300">
+                        $$p = \int_{t_{obs}}^{\infty} f(t) dt$$
+                    </div>
+                    <span class="text-xs text-slate-400">Área bajo la curva hacia el infinito</span>
+                </div>
+                <!-- Decoración de fondo -->
+                <i class="fas fa-chart-area absolute -right-4 -bottom-8 text-8xl text-white/5 z-0"></i>
+            </div>
+        </div>
+
+        <!-- GRÁFICO VISUAL DEL ÁREA BAJO LA CURVA -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-slate-100">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 text-center">Visualización Geométrica de la Probabilidad</h2>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                <!-- SVG de la Campana de Gauss -->
+                <div class="w-full md:w-1/2 relative">
+                    <svg viewBox="0 0 500 300" class="w-full h-auto" style="overflow: visible;">
+                        <!-- Ejes -->
+                        <line x1="20" y1="250" x2="480" y2="250" stroke="#94a3b8" stroke-width="2"/>
+                        <line x1="250" y1="20" x2="250" y2="250" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5,5"/>
+                        
+                        <!-- Curva principal -->
+                        <path d="M 20 250 C 150 250, 180 50, 250 50 C 320 50, 350 250, 480 250" fill="none" stroke="#3b82f6" stroke-width="4"/>
+                        
+                        <!-- Área de rechazo (Cola derecha para ilustrar) -->
+                        <path d="M 380 220 C 410 240, 440 250, 480 250 L 480 250 L 380 250 Z" fill="#ef4444" opacity="0.6"/>
+                        
+                        <!-- Línea del estadístico de prueba -->
+                        <line x1="380" y1="220" x2="380" y2="250" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>
+                        
+                        <!-- Textos -->
+                        <text x="250" y="270" text-anchor="middle" fill="#64748b" font-size="14" font-weight="bold">0 (Hipótesis Nula H₀)</text>
+                        <text x="380" y="270" text-anchor="middle" fill="#ef4444" font-size="14" font-weight="bold">Estadístico Observado</text>
+                        
+                        <!-- Flecha y etiqueta del valor P -->
+                        <path d="M 430 180 Q 450 150 420 235" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+                        <text x="430" y="170" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold" class="serif-text">Área = Valor p</text>
+                        
+                        <!-- Definir flecha -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <div class="w-full md:w-1/2 space-y-4">
+                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-200">
+                        <h4 class="font-bold text-blue-900 mb-2"><i class="fas fa-info-circle mr-2"></i>Si el estadístico cae en el centro:</h4>
+                        <p class="text-sm text-slate-700">El área geométrica restante en las colas (el valor \(p\)) será muy grande (ej. 0.45). Significa que estos datos son comunes si \(H_0\) es cierta. <strong>No probamos nada nuevo.</strong></p>
+                    </div>
+                    <div class="bg-red-50 p-5 rounded-lg border border-red-200">
+                        <h4 class="font-bold text-red-900 mb-2"><i class="fas fa-exclamation-circle mr-2"></i>Si el estadístico cae lejos (en la cola):</h4>
+                        <p class="text-sm text-slate-700">El área (\(p\)) se vuelve diminuta (ej. 0.01). Significa que es casi imposible obtener estos datos asumiendo \(H_0\). La conclusión lógica es <strong>Rechazar \(H_0\)</strong> a favor de nuestro hallazgo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGLA DE DECISIÓN (ALFA) -->
+        <div class="bg-slate-800 text-white rounded-2xl shadow-xl p-8 mb-12 flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-2/3 pr-8">
+                <h2 class="text-2xl font-bold mb-4 text-academygold">3. El Veredicto: El Umbral Alfa (\(\alpha\))</h2>
+                <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                    Los científicos no pueden depender de opiniones subjetivas para decir si un área es "suficientemente pequeña". Antes del experimento, fijan un límite máximo de error llamado Nivel de Significancia (\(\alpha\)), tradicionalmente fijado en <strong>0.05 (5%)</strong> en ciencias sociales e ingeniería general, o <strong>0.01 (1%)</strong> en medicina y resistencia de materiales críticos.
+                </p>
+            </div>
+            <div class="md:w-1/3 mt-6 md:mt-0 bg-white text-slate-800 p-6 rounded-xl shadow-inner w-full">
+                <h3 class="font-bold text-center border-b border-slate-200 pb-2 mb-4 text-sm uppercase">Regla de Oro Universal</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-2 rounded bg-green-50 text-green-800 font-medium">
+                        <span>\( p \le \alpha \)</span>
+                        <span class="text-xs uppercase bg-green-200 px-2 py-1 rounded">Rechazar \(H_0\)</span>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded bg-red-50 text-red-800 font-medium">
+                        <span>\( p > \alpha \)</span>
+                        <span class="text-xs uppercase bg-red-200 px-2 py-1 rounded">No Rechazar \(H_0\)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN 4: CLASIFICACIÓN DE DATOS -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">4. La Materia Prima: Clasificación de los Datos (Variables)</h2>
+            <p class="text-slate-600 mb-8 leading-relaxed">Antes de elegir cualquier prueba estadística, es obligatorio identificar qué tipo de datos recolectaste. La naturaleza de la variable define matemáticamente qué operaciones (media, varianza, proporciones) son lícitas y cuáles son un absurdo estadístico.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <!-- Datos Categóricos -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-slate-700 border-b border-slate-200 pb-2">Variables Cualitativas (Categóricas)</h3>
+                    
+                    <!-- Nominal -->
+                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-tags text-slate-500 text-2xl mr-3"></i>
+                            <h4 class="font-bold text-slate-800">1. Nominales</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-3">Son etiquetas o categorías <strong>sin ningún orden matemático ni jerarquía</strong>. Un número asignado solo sirve como código.</p>
+                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
+                            <li><strong class="text-slate-700">Ejemplos:</strong> Género, Ciudad, Tipo de Material, Marca de sensor.</li>
+                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Frecuencias (conteos), Porcentajes, Moda.</li>
+                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Pruebas Chi-cuadrada (\(\chi^2\)).</li>
+                        </ul>
+                        <div class="bg-red-50 text-red-800 text-xs p-2 rounded">
+                            <i class="fas fa-times-circle mr-1"></i> <strong>Absurdo:</strong> "El promedio de las ciudades es 2.4"
+                        </div>
+                    </div>
+
+                    <!-- Ordinal -->
+                    <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-sort-amount-up text-amber-500 text-2xl mr-3"></i>
+                            <h4 class="font-bold text-amber-900">2. Ordinales</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-3">Categorías que tienen un <strong>orden lógico o jerarquía</strong>, pero la "distancia" entre un nivel y otro no es medible ni exacta.</p>
+                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
+                            <li><strong class="text-slate-700">Ejemplos:</strong> Nivel socioeconómico (Bajo, Medio, Alto), Escalas Likert (Muy insatisfecho a Muy satisfecho).</li>
+                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Mediana, Percentiles, Rango intercuartílico.</li>
+                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Pruebas No Paramétricas (U de Mann-Whitney, Spearman).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Datos Cuantitativos -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-slate-700 border-b border-slate-200 pb-2">Variables Cuantitativas (Numéricas)</h3>
+                    
+                    <!-- Discreto -->
+                    <div class="bg-emerald-50 rounded-xl p-5 border border-emerald-200 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-hashtag text-emerald-500 text-2xl mr-3"></i>
+                            <h4 class="font-bold text-emerald-900">3. Discretas</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-3">Resultan de procesos de <strong>conteo</strong>. Toman valores numéricos enteros aislados (no aceptan fracciones infinitas en la realidad).</p>
+                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
+                            <li><strong class="text-slate-700">Ejemplos:</strong> Número de defectos en una viga (0, 1, 2...), Cantidad de empleados en la planta.</li>
+                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Media, Varianza, Intervalos.</li>
+                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Modelos paramétricos o conteos Poisson dependiendo de la distribución.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Continuo -->
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-ruler text-blue-500 text-2xl mr-3"></i>
+                            <h4 class="font-bold text-blue-900">4. Continuas</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-3">Resultan de procesos de <strong>medición</strong> física o financiera. Pueden tomar cualquier valor con infinitos decimales en un intervalo.</p>
+                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
+                            <li><strong class="text-slate-700">Ejemplos:</strong> Temperatura (23.4°C), Salario, Resistencia a la compresión, Tiempo de reacción.</li>
+                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> ¡Todas! (Media, Desviación Estándar, Varianza exacta).</li>
+                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Reinas de las pruebas paramétricas (ANOVA, t de Student, Pearson).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conector lógico -->
+            <div class="mt-8 bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-lg border-l-4 border-slate-400 text-sm text-slate-700 italic">
+                <i class="fas fa-arrow-circle-right text-slate-400 mr-2"></i><strong>La regla de oro:</strong> Solo a las variables <strong>Cuantitativas (Especialmente las Continuas)</strong> se les exige verificar la "Curva Normal" para poder aplicar el bisturí de las Pruebas Paramétricas.
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: PARAMÉTRICAS VS NO PARAMÉTRICAS -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">5. El Gran Dilema: ¿Pruebas Paramétricas o No Paramétricas?</h2>
+            <p class="text-slate-600 mb-8 leading-relaxed">Una vez que confirmas que tus datos son cuantitativos, debes evaluar su "salud" geométrica. La estadística divide sus herramientas en dos grandes familias dependiendo de si tus datos numéricos forman una campana (Normalidad) o no.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Paramétricas -->
+                <div class="bg-blue-50 rounded-xl p-6 border border-blue-200 shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-bell text-blue-600 text-3xl mr-4"></i>
+                        <h3 class="text-xl font-bold text-blue-900">Pruebas Paramétricas</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-700">
+                        <li class="flex items-start"><i class="fas fa-check text-blue-500 mt-1 mr-2"></i> <strong>El supuesto:</strong> Asumen que tus datos siguen una distribución normal perfecta (Campana de Gauss).</li>
+                        <li class="flex items-start"><i class="fas fa-bolt text-blue-500 mt-1 mr-2"></i> <strong>Poder Estadístico:</strong> Son extremadamente robustas. Es más fácil encontrar un valor \(p\) significativo si el efecto existe realmente.</li>
+                        <li class="flex items-start"><i class="fas fa-ruler text-blue-500 mt-1 mr-2"></i> <strong>Requisitos:</strong> Exigen datos numéricos continuos, varianzas similares y muestras idealmente grandes (\(n \ge 30\)).</li>
+                    </ul>
+                    <div class="mt-6 p-3 bg-white rounded-lg border border-blue-100 text-xs text-slate-600 flex items-center">
+                        <i class="fas fa-magic text-blue-400 mr-3 text-lg"></i>
+                        <p><strong>Analogía: Un bisturí láser.</strong> Es la herramienta más potente y precisa, pero requiere "condiciones de quirófano perfectas" (datos limpios y normales).</p>
+                    </div>
+                </div>
+
+                <!-- No Paramétricas -->
+                <div class="bg-amber-50 rounded-xl p-6 border border-amber-200 shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-bar text-amber-600 text-3xl mr-4"></i>
+                        <h3 class="text-xl font-bold text-amber-900">Pruebas No Paramétricas</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-700">
+                        <li class="flex items-start"><i class="fas fa-check text-amber-500 mt-1 mr-2"></i> <strong>El supuesto:</strong> Son "libres de distribución". No asumen ni exigen que los datos formen una campana.</li>
+                        <li class="flex items-start"><i class="fas fa-shield-alt text-amber-500 mt-1 mr-2"></i> <strong>Poder Estadístico:</strong> Son un poco menos sensibles para detectar el valor \(p\), pero son inmunes a los valores atípicos (outliers) que arruinarían el estudio.</li>
+                        <li class="flex items-start"><i class="fas fa-ruler text-amber-500 mt-1 mr-2"></i> <strong>Requisitos:</strong> Son la única opción válida para muestras muy pequeñas (\(n < 30\)) o cuando se trabaja con variables Ordinales.</li>
+                    </ul>
+                    <div class="mt-6 p-3 bg-white rounded-lg border border-amber-100 text-xs text-slate-600 flex items-center">
+                        <i class="fas fa-tools text-amber-400 mr-3 text-lg"></i>
+                        <p><strong>Analogía: Una navaja suiza.</strong> Funciona en cualquier terreno (datos asimétricos, ruidosos o pocos), aunque no sea tan "fina" como el láser.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 6: GUÍA DE PRUEBAS ESTADÍSTICAS -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 text-center">6. Guía Rápida de Pruebas Estadísticas</h2>
+            <p class="text-slate-600 mb-8 text-center">Seleccionar la prueba correcta depende del alcance de tu investigación, de tus variables y de si tus datos son "normales" (paramétricos) o no (no paramétricos).</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-slate-600">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Alcance / Objetivo</th>
+                            <th scope="col" class="px-6 py-3">Prueba Paramétrica<br>(Muestras Gdes/Datos Normales)</th>
+                            <th scope="col" class="px-6 py-3">Prueba No Paramétrica<br>(Muestras Pqñas/No Normales/Ordinales)</th>
+                            <th scope="col" class="px-6 py-3">Ejemplo Sencillo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Descriptivo -->
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Descriptivo / Exploratorio</strong><br>
+                                (Describir 1 variable en 1 grupo)
+                            </td>
+                            <td class="px-6 py-4">
+                                Intervalos de Confianza (Media)
+                            </td>
+                            <td class="px-6 py-4">
+                                Intervalos de Confianza (Mediana)
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿Cuál es el salario promedio de los arquitectos en Bogotá?</em> (Solo describes, no comparas).
+                            </td>
+                        </tr>
+
+                        <!-- Explicativo: Comparar 2 grupos independientes -->
+                        <tr class="bg-slate-50 border-b">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Explicativo / Experimental</strong><br>
+                                (Comparar 2 grupos distintos)
+                            </td>
+                            <td class="px-6 py-4">
+                                <strong>Prueba t de Student para muestras independientes</strong>
+                            </td>
+                            <td class="px-6 py-4">
+                                Prueba U de Mann-Whitney
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿El concreto con aditivo A resiste más compresión que el concreto con aditivo B?</em>
+                            </td>
+                        </tr>
+
+                        <!-- Explicativo: Comparar el mismo grupo 2 veces -->
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Explicativo / Experimental</strong><br>
+                                (Comparar 1 grupo: Antes vs. Después)
+                            </td>
+                            <td class="px-6 py-4">
+                                <strong>Prueba t de Student para muestras pareadas</strong>
+                            </td>
+                            <td class="px-6 py-4">
+                                Prueba de Rangos con Signo de Wilcoxon
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿Aumentó la productividad de los empleados después del curso de capacitación?</em> (Se evalúa a las mismas personas).
+                            </td>
+                        </tr>
+
+                        <!-- Explicativo: Comparar 3 o más grupos -->
+                        <tr class="bg-slate-50 border-b">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Explicativo / Experimental</strong><br>
+                                (Comparar 3 o más grupos)
+                            </td>
+                            <td class="px-6 py-4">
+                                <strong>ANOVA (Análisis de Varianza)</strong>
+                            </td>
+                            <td class="px-6 py-4">
+                                Prueba de Kruskal-Wallis
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿Cuál de tres métodos de fertilización distintos (A, B o C) produce más rendimiento en cultivos?</em>
+                            </td>
+                        </tr>
+
+                        <!-- Correlacional: Relación entre variables continuas -->
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Correlacional</strong><br>
+                                (Asociación entre 2 variables continuas)
+                            </td>
+                            <td class="px-6 py-4">
+                                <strong>Correlación de Pearson (\(r\))</strong>
+                            </td>
+                            <td class="px-6 py-4">
+                                Correlación de Spearman (\(\rho\))
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿A mayor temperatura ambiente, mayor es el consumo de energía en refrigeración?</em> (Diseño transversal).
+                            </td>
+                        </tr>
+
+                        <!-- Correlacional: Variables categóricas -->
+                        <tr class="bg-slate-50">
+                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                                <strong>Correlacional</strong><br>
+                                (Asociación entre variables categóricas)
+                            </td>
+                            <td class="px-6 py-4" colspan="2">
+                                <div class="text-center font-semibold">Prueba Chi-cuadrada (\(\chi^2\))</div>
+                                <span class="text-xs text-slate-500 block text-center mt-1">(Se usa con variables Nominales u Ordinales)</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <em>¿Existe relación entre el género del comprador (Hombre/Mujer) y el tipo de vivienda elegida (Casa/Apto)?</em>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <p class="text-sm text-blue-900">
+                    <i class="fas fa-lightbulb text-amber-500 mr-2"></i><strong>Nota sobre la Población y el Muestreo:</strong> La elección paramétrica vs no paramétrica a menudo se ve forzada por el tamaño de la muestra (\(n\)). Un muestreo probabilístico con una muestra grande (ej. \(n > 30\) por grupo) tiende a normalizarse por el Teorema del Límite Central, permitiendo usar las pruebas paramétricas (más potentes). Si el tamaño poblacional es muy pequeño o el muestreo fue por conveniencia arrojando datos sesgados, usualmente se debe recurrir a las pruebas no paramétricas.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center text-slate-500 text-sm py-8 border-t border-slate-200 mt-12">
+        <p>Material Docente Complementario - Metodología de la Investigación</p>
+        <p class="mt-1 opacity-75">Conceptos adaptados de <i>Metodología de la Investigación</i> (Sampieri) y <i>Practical Research</i> (Leedy).</p>
+    </footer>
+
+</body>
+</html>
