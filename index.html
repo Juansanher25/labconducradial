@@ -3,492 +3,799 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografía: Anatomía del Valor p y Pruebas Estadísticas</title>
+    <title>Laboratorio 2: Conducción Radial - Informe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- MathJax -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-        h1, h2, h3, .serif-text { font-family: 'Merriweather', serif; }
-        
-        .math-box {
+        /* 1. THE SETUP & RESET */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        body {
+            background-color: #f1f5f9; /* Light gray/blue background for PDF printability */
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+            min-height: 100vh;
+            padding: 20px 0;
+            place-items: center;
+            font-family: 'Lato', sans-serif;
+            color: #334155;
+        }
+
+        /* Slide Container Setup */
+        .slide-container {
+            align-items: center;
             background-color: #ffffff;
-            border-left: 4px solid #3b82f6;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 720px;
+            justify-content: center;
+            overflow: hidden;
+            padding: 60px;
+            position: relative;
+            width: 1280px;
+            border-top: 6px solid #0284c7; /* Brand top border */
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        /* 2. CONSISTENT TYPOGRAPHY */
+        .slide-container h1,
+        .slide-container h2,
+        .slide-container h3 {
+            color: #0f172a;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
         }
 
-        .highlight-text {
-            background: linear-gradient(120deg, #dbeafe 0%, #dbeafe 100%);
-            background-repeat: no-repeat;
-            background-size: 100% 40%;
-            background-position: 0 80%;
+        .slide-container h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-align: center;
         }
 
-        /* Styles for the table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        th, td {
-            border: 1px solid #cbd5e1;
-            padding: 1rem;
-            text-align: left;
-        }
-        th {
-            background-color: #f8fafc;
+        .slide-container .slide-title {
+            font-size: 40px;
             font-weight: 600;
-            color: #1e293b;
+            margin-bottom: 40px;
+            text-align: left;
+            width: 100%;
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 15px;
         }
-        tr:nth-child(even) {
-            background-color: #f1f5f9;
+
+        .slide-container .slide-title span {
+            color: #0284c7; /* Highlight Color */
+        }
+
+        .slide-container h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .slide-container p,
+        .slide-container li,
+        .slide-container th,
+        .slide-container td {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .slide-container .content-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* 3. EDITABLE FIELDS FOR STUDENTS */
+        .editable-field {
+            border: 2px dashed #cbd5e1;
+            background-color: rgba(241, 245, 249, 0.4);
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: all 0.2s ease;
+            outline: none;
+            cursor: text;
+        }
+
+        .editable-field:hover,
+        .editable-field:focus {
+            border-color: #0284c7;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        .editable-field[data-placeholder]:empty:before {
+            content: attr(data-placeholder);
+            color: #94a3b8;
+            pointer-events: none;
+            display: block;
+            font-style: italic;
+        }
+
+        /* 4. LAYOUT DEFINITIONS */
+        
+        /* Title Layout */
+        .title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .title-layout .subtitle {
+            font-size: 32px;
+            color: #0284c7;
+            font-weight: 600;
+            margin: 20px 0 50px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .title-layout .meta-info {
+            font-size: 22px;
+            color: #475569;
+            background: #f8fafc;
+            padding: 20px 40px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+            height: 100%;
+            align-items: start;
+        }
+
+        .two-column.tiled {
+            align-items: stretch;
+        }
+
+        .two-column.tiled > div {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .two-column.tiled h3 {
+            color: #0284c7;
+        }
+
+        /* Image Wrappers */
+        .image-wrapper {
+            border-radius: 12px;
+            height: 400px;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1f5f9;
+        }
+
+        .image-wrapper img, .image-wrapper svg {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Table Layout */
+        .table-layout {
+            width: 100%;
+        }
+
+        .table-layout table {
+            border-collapse: collapse;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .table-layout th,
+        .table-layout td {
+            border: 1px solid #e2e8f0;
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .table-layout th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+        }
+
+        /* Tiled Content (Icons) */
+        .tiled-content {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .tile {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 40px 30px;
+            text-align: center;
+            align-items: center;
+        }
+
+        .tile .icon {
+            color: #0284c7;
+            font-size: 50px;
+            margin-bottom: 25px;
+        }
+
+        /* Bullet Points */
+        .bullet-list {
+            width: 100%;
+        }
+
+        .bullet-list ul {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 25px;
+        }
+
+        .bullet-list i {
+            color: #0284c7;
+            font-size: 24px;
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        .bullet-list li strong {
+            color: #0f172a;
+        }
+
+        /* Timeline Layout */
+        .timeline-layout {
+            align-items: stretch;
+            display: flex;
+            height: stretch;
+            justify-content: space-between;
+            position: relative;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .timeline-layout .timeline-line {
+            background-color: #e2e8f0;
+            height: 4px;
+            left: 0;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-2px);
+            width: 100%;
+            z-index: 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            text-align: center;
+            width: 23%;
+            z-index: 1;
+        }
+
+        .timeline-item::after {
+            background-color: #ffffff;
+            border-radius: 50%;
+            border: 5px solid #0284c7;
+            content: '';
+            height: 24px;
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            z-index: 2;
+        }
+
+        .timeline-item .content-wrapper {
+            position: absolute;
+            width: 100%;
+            left: 0;
+        }
+
+        .timeline-item:nth-child(odd) .content-wrapper {
+            bottom: 50%;
+            margin-bottom: 35px;
+        }
+
+        .timeline-item:nth-child(even) .content-wrapper {
+            top: 50%;
+            margin-top: 35px;
+        }
+
+        /* Bleed Image Layout */
+        .slide-container.bleed-image-layout {
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+        }
+
+        .slide-container.bleed-image-layout > .content-container {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .slide-container.bleed-image-layout > .image-container {
+            height: 720px;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+        }
+
+        .slide-container.bleed-image-layout svg.bleed-image-side {
+            height: 720px;
+            width: 100%;
+        }
+
+        /* Math and Formulas */
+        .formula-container {
+            font-size: 28px;
+            text-align: center;
+            margin: 25px 0;
+            color: #0284c7;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        /* Media query para impresión PDF */
+        @media print {
+            body { background-color: white; padding: 0; margin: 0; display: block; }
+            .slide-container { 
+                box-shadow: none; 
+                margin: 0 auto; 
+                page-break-after: always;
+                border-top: none; /* Opcional: quitar borde en PDF */
+            }
+            .editable-field { border: 1px solid #cbd5e1; background-color: transparent; }
+            .editable-field[data-placeholder]:empty:before { display: none; }
         }
     </style>
 </head>
-<body class="text-slate-800 pb-12">
+<body>
 
-    <!-- HEADER -->
-    <header class="gradient-bg text-white py-16 px-6 relative overflow-hidden shadow-2xl">
-        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
-        <div class="max-w-5xl mx-auto relative z-10">
-            <div class="inline-flex items-center bg-blue-500/30 border border-blue-400/50 rounded-full px-4 py-1 text-sm font-semibold mb-6">
-                <i class="fas fa-microscope mr-2"></i> Estadística Inferencial Avanzada
-            </div>
-            <h1 class="text-4xl md:text-6xl font-bold mb-4">La Anatomía del Valor <span class="italic font-serif text-blue-300">p</span> y Pruebas Estadísticas</h1>
-            <p class="text-xl text-blue-100 max-w-3xl leading-relaxed">
-                Cómo los investigadores demuestran matemáticamente que sus descubrimientos no son obra del azar y eligen la prueba adecuada.
-            </p>
+<!-- Slide 1: Title_Slide -->
+<div class="slide-container" id="slide1">
+    <div class="title-layout">
+        <h1>Laboratorio 2 de Transferencia de Calor I</h1>
+        <p class="subtitle">Conducción Radial en Estado Estacionario</p>
+        <div class="meta-info">
+            <p><strong>Profesor:</strong> Ph.D. Juan Sandoval Herrera</p>
+            <p><strong>Institución:</strong> Universidad de América</p>
+            <p><strong>Año:</strong> 2026</p>
         </div>
-    </header>
+    </div>
+</div>
 
-    <main class="max-w-5xl mx-auto px-6 -mt-8 relative z-20">
-        
-        <!-- INTRODUCCIÓN Y MITOS -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">1. La Premisa: El Juicio a la Hipótesis Nula (\(H_0\))</h2>
-            
-            <div class="grid md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <p class="text-slate-600 leading-relaxed mb-4">
-                        El cálculo del valor <span class="italic">p</span> opera bajo una lógica de <strong class="text-slate-800">reducción al absurdo</strong>. Para probar que una intervención funciona (Hipótesis Alternativa \(H_A\)), el modelo matemático asume primero que <strong>no hay ningún efecto</strong> (Hipótesis Nula \(H_0\)).
-                    </p>
-                    <div class="math-box p-4 rounded-lg mt-4 text-center">
-                        <span class="text-slate-500 text-sm mb-2 block">Asunción Inicial:</span>
-                        <div class="text-xl">
-                            $$H_0 : \mu_{experimental} = \mu_{control}$$
-                        </div>
-                    </div>
-                </div>
+<!-- Slide 2: Table (Group Info) -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Integrantes del <span>Grupo</span></h2>
+    <div class="content-area">
+        <p style="margin-bottom: 30px;">Por favor, ingrese los nombres completos y códigos correspondientes a cada integrante del grupo que presenta este informe.</p>
+        <div class="table-layout">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60%; text-align: left; padding-left: 30px;">Nombre del Estudiante</th>
+                        <th style="width: 40%">Código</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: left; padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Apellidos, Nombres"></div></td>
+                        <td style="padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Ej. 100012345"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Apellidos, Nombres"></div></td>
+                        <td style="padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Ej. 100012345"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Apellidos, Nombres"></div></td>
+                        <td style="padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Ej. 100012345"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Apellidos, Nombres"></div></td>
+                        <td style="padding: 10px;"><div contenteditable="true" class="editable-field" data-placeholder="Ej. 100012345"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Image_Right_Text_Left -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">1. Introducción y <span>Marco Teórico</span></h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <p>De acuerdo a la ley de Fourier, cuando las superficies interior y exterior de un cilindro de paredes gruesas se encuentran a una temperatura diferente, el calor fluye radialmente.</p>
+                <p>El área de flujo de calor es <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>A</mi><mo>=</mo><mn>2</mn><mi>&pi;</mi><mi>r</mi><mi>L</mi></math>. Puesto que el área aumenta con el radio, el gradiente de temperatura debe disminuir proporcionalmente. La transferencia de calor por conducción se halla mediante:</p>
                 
-                <div class="bg-red-50 rounded-xl p-6 border border-red-100">
-                    <h3 class="font-bold text-red-800 flex items-center mb-3">
-                        <i class="fas fa-skull-crossbones mr-2"></i> El Gran Mito (Leedy & Ormrod)
-                    </h3>
-                    <p class="text-sm text-red-900 mb-2"><strong>FALSO:</strong> "El valor <i>p</i> es la probabilidad de que los resultados sean producto del azar."</p>
-                    <p class="text-sm text-red-900"><strong>FALSO:</strong> "El valor <i>p</i> indica si mi hipótesis de investigación es cierta."</p>
-                    <hr class="border-red-200 my-3">
-                    <p class="text-sm text-green-800 font-semibold mt-2">
-                        <i class="fas fa-check-circle mr-1"></i> VERDADERO: Es la probabilidad de observar nuestros datos, asumiendo que \(H_0\) fuera 100% cierta en el universo.
-                    </p>
+                <div class="formula-container">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;">
+                        <mi>q</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mn>2</mn><mi>&pi;</mi><mi>L</mi><mi>k</mi>
+                                <mo>(</mo><msub><mi>T</mi><mn>1</mn></msub><mo>-</mo><msub><mi>T</mi><mn>6</mn></msub><mo>)</mo>
+                            </mrow>
+                            <mrow>
+                                <mi>ln</mi><mo>(</mo><msub><mi>r</mi><mn>6</mn></msub><mo>/</mo><msub><mi>r</mi><mn>1</mn></msub><mo>)</mo>
+                            </mrow>
+                        </mfrac>
+                    </math>
+                </div>
+                <p>Donde la potencia suministrada al calentador se obtiene del voltaje y corriente:</p>
+                <div class="formula-container" style="padding: 5px;">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;">
+                        <mi>q</mi><mo>=</mo><mi>V</mi><mo>&times;</mo><mi>I</mi>
+                    </math>
                 </div>
             </div>
-        </div>
-
-        <!-- EL CÁLCULO PASO A PASO -->
-        <h2 class="text-3xl font-bold text-slate-800 mb-8 text-center">2. Los 3 Pasos del Cálculo (La Matemática del Descubrimiento)</h2>
-
-        <div class="space-y-8 mb-12">
-            
-            <!-- Paso 1 -->
-            <div class="bg-white rounded-xl shadow-md p-8 border-l-4 border-blue-500 flex flex-col md:flex-row gap-8 items-center">
-                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">1</div>
-                <div class="flex-1">
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Medir el "Ruido" (Error Estándar)</h3>
-                    <p class="text-slate-600 text-sm mb-4">Antes de buscar diferencias, calculamos la dispersión natural del sistema si tomáramos infinitas muestras. A mayor muestra (\(n\)), menor ruido.</p>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 min-w-[250px] text-center">
-                    $$SE = \frac{s}{\sqrt{n}}$$
-                    <span class="text-xs text-slate-400">s = desviación estándar, n = muestra</span>
-                </div>
-            </div>
-
-            <!-- Paso 2 -->
-            <div class="bg-white rounded-xl shadow-md p-8 border-l-4 border-amber-500 flex flex-col md:flex-row gap-8 items-center">
-                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">2</div>
-                <div class="flex-1">
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Relación Señal/Ruido (Estadístico de Prueba)</h3>
-                    <p class="text-slate-600 text-sm mb-4">Comparamos la magnitud de nuestro hallazgo (Señal) contra la varianza natural (Ruido). Fórmulas como la prueba \(t\) de Student o \(Z\) hacen esto.</p>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 min-w-[250px] text-center">
-                    $$t = \frac{\bar{x}_1 - \bar{x}_2}{SE_{combinado}}$$
-                    <span class="text-xs text-slate-400">Señal observada sobre el Ruido esperado</span>
-                </div>
-            </div>
-
-            <!-- Paso 3 -->
-            <div class="bg-slate-900 text-white rounded-xl shadow-2xl p-8 border-l-4 border-purple-500 flex flex-col md:flex-row gap-8 items-center relative overflow-hidden">
-                <div class="w-16 h-16 bg-purple-500/20 text-purple-400 border border-purple-500/50 rounded-full flex items-center justify-center text-2xl font-bold shrink-0 z-10">3</div>
-                <div class="flex-1 z-10">
-                    <h3 class="text-xl font-bold text-white mb-2">Integrar el Área (Obtener el Valor p)</h3>
-                    <p class="text-slate-300 text-sm mb-4">El estadístico (ej. \(t = 2.5\)) se proyecta en una curva de probabilidad (Campana de Gauss). El valor \(p\) es la integral geométrica del área restante en las colas.</p>
-                </div>
-                <div class="bg-black/50 p-4 rounded-lg border border-slate-700 min-w-[250px] text-center z-10">
-                    <div class="text-purple-300">
-                        $$p = \int_{t_{obs}}^{\infty} f(t) dt$$
-                    </div>
-                    <span class="text-xs text-slate-400">Área bajo la curva hacia el infinito</span>
-                </div>
-                <!-- Decoración de fondo -->
-                <i class="fas fa-chart-area absolute -right-4 -bottom-8 text-8xl text-white/5 z-0"></i>
-            </div>
-        </div>
-
-        <!-- GRÁFICO VISUAL DEL ÁREA BAJO LA CURVA -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 border border-slate-100">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 text-center">Visualización Geométrica de la Probabilidad</h2>
-            
-            <div class="flex flex-col md:flex-row items-center justify-center gap-12">
-                <!-- SVG de la Campana de Gauss -->
-                <div class="w-full md:w-1/2 relative">
-                    <svg viewBox="0 0 500 300" class="w-full h-auto" style="overflow: visible;">
-                        <!-- Ejes -->
-                        <line x1="20" y1="250" x2="480" y2="250" stroke="#94a3b8" stroke-width="2"/>
-                        <line x1="250" y1="20" x2="250" y2="250" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5,5"/>
-                        
-                        <!-- Curva principal -->
-                        <path d="M 20 250 C 150 250, 180 50, 250 50 C 320 50, 350 250, 480 250" fill="none" stroke="#3b82f6" stroke-width="4"/>
-                        
-                        <!-- Área de rechazo (Cola derecha para ilustrar) -->
-                        <path d="M 380 220 C 410 240, 440 250, 480 250 L 480 250 L 380 250 Z" fill="#ef4444" opacity="0.6"/>
-                        
-                        <!-- Línea del estadístico de prueba -->
-                        <line x1="380" y1="220" x2="380" y2="250" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>
-                        
-                        <!-- Textos -->
-                        <text x="250" y="270" text-anchor="middle" fill="#64748b" font-size="14" font-weight="bold">0 (Hipótesis Nula H₀)</text>
-                        <text x="380" y="270" text-anchor="middle" fill="#ef4444" font-size="14" font-weight="bold">Estadístico Observado</text>
-                        
-                        <!-- Flecha y etiqueta del valor P -->
-                        <path d="M 430 180 Q 450 150 420 235" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-                        <text x="430" y="170" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold" class="serif-text">Área = Valor p</text>
-                        
-                        <!-- Definir flecha -->
+            <div>
+                <div class="image-wrapper" style="border: 1px solid #e2e8f0; padding: 20px;">
+                    <!-- SVG Diagrama de Conducción Radial -->
+                    <svg viewBox="0 0 400 400" width="100%" height="100%">
                         <defs>
-                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                                <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+                            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
                             </marker>
                         </defs>
+                        <!-- Gradients -->
+                        <radialGradient id="heatGrad">
+                            <stop offset="0%" stop-color="#fca5a5" />
+                            <stop offset="100%" stop-color="#bae6fd" />
+                        </radialGradient>
+                        
+                        <!-- Cylinders -->
+                        <circle cx="200" cy="200" r="160" fill="url(#heatGrad)" stroke="#0284c7" stroke-width="3"/>
+                        <circle cx="200" cy="200" r="40" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/>
+                        
+                        <!-- Radius lines -->
+                        <line x1="200" y1="200" x2="360" y2="200" stroke="#475569" stroke-width="2" stroke-dasharray="5,5" />
+                        <text x="280" y="190" fill="#0f172a" font-family="Poppins, sans-serif" font-weight="600" font-size="16">r₆</text>
+                        
+                        <line x1="200" y1="200" x2="200" y2="160" stroke="#475569" stroke-width="2" stroke-dasharray="5,5" />
+                        <text x="215" y="185" fill="#ffffff" font-family="Poppins, sans-serif" font-weight="600" font-size="16">r₁</text>
+                        
+                        <!-- Heat Flow Arrows -->
+                        <g stroke="#ef4444" stroke-width="4" marker-end="url(#arrow)">
+                            <line x1="230" y1="170" x2="310" y2="90"/>
+                            <line x1="170" y1="230" x2="90" y2="310"/>
+                            <line x1="170" y1="170" x2="90" y2="90"/>
+                            <line x1="230" y1="230" x2="310" y2="310"/>
+                        </g>
+                        <text x="310" y="75" fill="#ef4444" font-family="Poppins, sans-serif" font-weight="600" font-size="24">q</text>
+                        
+                        <!-- Temperatures -->
+                        <text x="200" y="205" text-anchor="middle" fill="#ffffff" font-family="Poppins, sans-serif" font-weight="600" font-size="18">T₁</text>
+                        <text x="355" y="225" text-anchor="middle" fill="#0284c7" font-family="Poppins, sans-serif" font-weight="600" font-size="18">T₆</text>
                     </svg>
                 </div>
-                
-                <div class="w-full md:w-1/2 space-y-4">
-                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-200">
-                        <h4 class="font-bold text-blue-900 mb-2"><i class="fas fa-info-circle mr-2"></i>Si el estadístico cae en el centro:</h4>
-                        <p class="text-sm text-slate-700">El área geométrica restante en las colas (el valor \(p\)) será muy grande (ej. 0.45). Significa que estos datos son comunes si \(H_0\) es cierta. <strong>No probamos nada nuevo.</strong></p>
-                    </div>
-                    <div class="bg-red-50 p-5 rounded-lg border border-red-200">
-                        <h4 class="font-bold text-red-900 mb-2"><i class="fas fa-exclamation-circle mr-2"></i>Si el estadístico cae lejos (en la cola):</h4>
-                        <p class="text-sm text-slate-700">El área (\(p\)) se vuelve diminuta (ej. 0.01). Significa que es casi imposible obtener estos datos asumiendo \(H_0\). La conclusión lógica es <strong>Rechazar \(H_0\)</strong> a favor de nuestro hallazgo.</p>
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- REGLA DE DECISIÓN (ALFA) -->
-        <div class="bg-slate-800 text-white rounded-2xl shadow-xl p-8 mb-12 flex flex-col md:flex-row items-center justify-between">
-            <div class="md:w-2/3 pr-8">
-                <h2 class="text-2xl font-bold mb-4 text-academygold">3. El Veredicto: El Umbral Alfa (\(\alpha\))</h2>
-                <p class="text-slate-300 mb-4 text-sm leading-relaxed">
-                    Los científicos no pueden depender de opiniones subjetivas para decir si un área es "suficientemente pequeña". Antes del experimento, fijan un límite máximo de error llamado Nivel de Significancia (\(\alpha\)), tradicionalmente fijado en <strong>0.05 (5%)</strong> en ciencias sociales e ingeniería general, o <strong>0.01 (1%)</strong> en medicina y resistencia de materiales críticos.
-                </p>
-            </div>
-            <div class="md:w-1/3 mt-6 md:mt-0 bg-white text-slate-800 p-6 rounded-xl shadow-inner w-full">
-                <h3 class="font-bold text-center border-b border-slate-200 pb-2 mb-4 text-sm uppercase">Regla de Oro Universal</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-2 rounded bg-green-50 text-green-800 font-medium">
-                        <span>\( p \le \alpha \)</span>
-                        <span class="text-xs uppercase bg-green-200 px-2 py-1 rounded">Rechazar \(H_0\)</span>
-                    </div>
-                    <div class="flex items-center justify-between p-2 rounded bg-red-50 text-red-800 font-medium">
-                        <span>\( p > \alpha \)</span>
-                        <span class="text-xs uppercase bg-red-200 px-2 py-1 rounded">No Rechazar \(H_0\)</span>
-                    </div>
-                </div>
-            </div>
+<!-- Slide 4: Styled_Bullet_Points -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">2. Objetivos de la <span>Práctica</span></h2>
+    <div class="content-area">
+        <div class="bullet-list">
+            <ul>
+                <li>
+                    <i class="fa-solid fa-bullseye"></i> 
+                    <strong>Análisis del Fenómeno:</strong> Analizar el fenómeno de la transferencia de calor por conducción radial para un sistema en estado estacionario unidimensional.
+                </li>
+                <li>
+                    <i class="fa-solid fa-temperature-arrow-up"></i> 
+                    <strong>Medición de Temperatura:</strong> Medir la distribución de temperatura a través de la pared de un cilindro (flujo de energía radial) y demostrar el efecto de un cambio en el flujo de calor.
+                </li>
+                <li>
+                    <i class="fa-solid fa-calculator"></i> 
+                    <strong>Aplicación de Fourier:</strong> Comprender el uso de la ecuación de Fourier en la determinación de un flujo constante de calor a través de la pared de un cilindro y determinar la conductividad térmica (<math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>k</mi></math>).
+                </li>
+                <li>
+                    <i class="fa-solid fa-clock-rotate-left"></i> 
+                    <strong>Estado Transitorio:</strong> Observar cualitativamente el comportamiento y la conducción del calor en estado transitorio.
+                </li>
+            </ul>
         </div>
+    </div>
+</div>
 
-        <!-- NUEVA SECCIÓN 4: CLASIFICACIÓN DE DATOS -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">4. La Materia Prima: Clasificación de los Datos (Variables)</h2>
-            <p class="text-slate-600 mb-8 leading-relaxed">Antes de elegir cualquier prueba estadística, es obligatorio identificar qué tipo de datos recolectaste. La naturaleza de la variable define matemáticamente qué operaciones (media, varianza, proporciones) son lícitas y cuáles son un absurdo estadístico.</p>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                
-                <!-- Datos Categóricos -->
-                <div class="space-y-6">
-                    <h3 class="text-xl font-bold text-slate-700 border-b border-slate-200 pb-2">Variables Cualitativas (Categóricas)</h3>
-                    
-                    <!-- Nominal -->
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-tags text-slate-500 text-2xl mr-3"></i>
-                            <h4 class="font-bold text-slate-800">1. Nominales</h4>
-                        </div>
-                        <p class="text-sm text-slate-600 mb-3">Son etiquetas o categorías <strong>sin ningún orden matemático ni jerarquía</strong>. Un número asignado solo sirve como código.</p>
-                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
-                            <li><strong class="text-slate-700">Ejemplos:</strong> Género, Ciudad, Tipo de Material, Marca de sensor.</li>
-                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Frecuencias (conteos), Porcentajes, Moda.</li>
-                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Pruebas Chi-cuadrada (\(\chi^2\)).</li>
-                        </ul>
-                        <div class="bg-red-50 text-red-800 text-xs p-2 rounded">
-                            <i class="fas fa-times-circle mr-1"></i> <strong>Absurdo:</strong> "El promedio de las ciudades es 2.4"
-                        </div>
-                    </div>
-
-                    <!-- Ordinal -->
-                    <div class="bg-amber-50 rounded-xl p-5 border border-amber-200 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-sort-amount-up text-amber-500 text-2xl mr-3"></i>
-                            <h4 class="font-bold text-amber-900">2. Ordinales</h4>
-                        </div>
-                        <p class="text-sm text-slate-600 mb-3">Categorías que tienen un <strong>orden lógico o jerarquía</strong>, pero la "distancia" entre un nivel y otro no es medible ni exacta.</p>
-                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
-                            <li><strong class="text-slate-700">Ejemplos:</strong> Nivel socioeconómico (Bajo, Medio, Alto), Escalas Likert (Muy insatisfecho a Muy satisfecho).</li>
-                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Mediana, Percentiles, Rango intercuartílico.</li>
-                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Pruebas No Paramétricas (U de Mann-Whitney, Spearman).</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Datos Cuantitativos -->
-                <div class="space-y-6">
-                    <h3 class="text-xl font-bold text-slate-700 border-b border-slate-200 pb-2">Variables Cuantitativas (Numéricas)</h3>
-                    
-                    <!-- Discreto -->
-                    <div class="bg-emerald-50 rounded-xl p-5 border border-emerald-200 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-hashtag text-emerald-500 text-2xl mr-3"></i>
-                            <h4 class="font-bold text-emerald-900">3. Discretas</h4>
-                        </div>
-                        <p class="text-sm text-slate-600 mb-3">Resultan de procesos de <strong>conteo</strong>. Toman valores numéricos enteros aislados (no aceptan fracciones infinitas en la realidad).</p>
-                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
-                            <li><strong class="text-slate-700">Ejemplos:</strong> Número de defectos en una viga (0, 1, 2...), Cantidad de empleados en la planta.</li>
-                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> Media, Varianza, Intervalos.</li>
-                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Modelos paramétricos o conteos Poisson dependiendo de la distribución.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Continuo -->
-                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 shadow-sm">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-ruler text-blue-500 text-2xl mr-3"></i>
-                            <h4 class="font-bold text-blue-900">4. Continuas</h4>
-                        </div>
-                        <p class="text-sm text-slate-600 mb-3">Resultan de procesos de <strong>medición</strong> física o financiera. Pueden tomar cualquier valor con infinitos decimales en un intervalo.</p>
-                        <ul class="text-xs text-slate-500 space-y-2 mb-3">
-                            <li><strong class="text-slate-700">Ejemplos:</strong> Temperatura (23.4°C), Salario, Resistencia a la compresión, Tiempo de reacción.</li>
-                            <li><strong class="text-slate-700">Operaciones permitidas:</strong> ¡Todas! (Media, Desviación Estándar, Varianza exacta).</li>
-                            <li><strong class="text-slate-700">Estadística Inferencial:</strong> Reinas de las pruebas paramétricas (ANOVA, t de Student, Pearson).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Conector lógico -->
-            <div class="mt-8 bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-lg border-l-4 border-slate-400 text-sm text-slate-700 italic">
-                <i class="fas fa-arrow-circle-right text-slate-400 mr-2"></i><strong>La regla de oro:</strong> Solo a las variables <strong>Cuantitativas (Especialmente las Continuas)</strong> se les exige verificar la "Curva Normal" para poder aplicar el bisturí de las Pruebas Paramétricas.
-            </div>
-        </div>
-
-        <!-- SECCIÓN 5: PARAMÉTRICAS VS NO PARAMÉTRICAS -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4">5. El Gran Dilema: ¿Pruebas Paramétricas o No Paramétricas?</h2>
-            <p class="text-slate-600 mb-8 leading-relaxed">Una vez que confirmas que tus datos son cuantitativos, debes evaluar su "salud" geométrica. La estadística divide sus herramientas en dos grandes familias dependiendo de si tus datos numéricos forman una campana (Normalidad) o no.</p>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Paramétricas -->
-                <div class="bg-blue-50 rounded-xl p-6 border border-blue-200 shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-bell text-blue-600 text-3xl mr-4"></i>
-                        <h3 class="text-xl font-bold text-blue-900">Pruebas Paramétricas</h3>
-                    </div>
-                    <ul class="space-y-3 text-sm text-slate-700">
-                        <li class="flex items-start"><i class="fas fa-check text-blue-500 mt-1 mr-2"></i> <strong>El supuesto:</strong> Asumen que tus datos siguen una distribución normal perfecta (Campana de Gauss).</li>
-                        <li class="flex items-start"><i class="fas fa-bolt text-blue-500 mt-1 mr-2"></i> <strong>Poder Estadístico:</strong> Son extremadamente robustas. Es más fácil encontrar un valor \(p\) significativo si el efecto existe realmente.</li>
-                        <li class="flex items-start"><i class="fas fa-ruler text-blue-500 mt-1 mr-2"></i> <strong>Requisitos:</strong> Exigen datos numéricos continuos, varianzas similares y muestras idealmente grandes (\(n \ge 30\)).</li>
+<!-- Slide 5: Bleed_Image_Right -->
+<div class="slide-container bleed-image-layout" id="slide5">
+    <div class="content-container">
+        <h2 class="slide-title" style="width: auto;">3. Equipos e <span>Instrumentos</span></h2>
+        <div class="content-area">
+            <div class="bleed-text-side">
+                <p style="margin-bottom: 25px;">El equipo <strong>HT12</strong> demuestra la conducción radial, conectándose a una unidad de servicio común (HT10X).</p>
+                <div class="bullet-list">
+                    <ul>
+                        <li><i class="fa-solid fa-compact-disc"></i> <strong>Material del Disco:</strong> Sección cilíndrica de latón (espesor 3,2 mm, diámetro 110 mm) con núcleo de cobre (14 mm).</li>
+                        <li><i class="fa-solid fa-fire-flame-curved"></i> <strong>Conductividad Térmica:</strong> Latón con <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>k</mi><mo>&approx;</mo><mn>125</mn><mi>W</mi><mo>/</mo><mi>m</mi><mo>&middot;</mo><mi>C</mi></math>.</li>
+                        <li><i class="fa-solid fa-droplet"></i> <strong>Enfriamiento:</strong> Agua fría fluye en la periferia, controlado por válvula manual (0 – 1,5 l/min).</li>
+                        <li><i class="fa-solid fa-satellite-dish"></i> <strong>Sensores:</strong> Termocupla <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mn>1</mn></msub></math> a 7 mm del centro, <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mn>2</mn></msub></math> a 10 mm. Demás sensores separados cada 10 mm radialmente.</li>
                     </ul>
-                    <div class="mt-6 p-3 bg-white rounded-lg border border-blue-100 text-xs text-slate-600 flex items-center">
-                        <i class="fas fa-magic text-blue-400 mr-3 text-lg"></i>
-                        <p><strong>Analogía: Un bisturí láser.</strong> Es la herramienta más potente y precisa, pero requiere "condiciones de quirófano perfectas" (datos limpios y normales).</p>
-                    </div>
-                </div>
-
-                <!-- No Paramétricas -->
-                <div class="bg-amber-50 rounded-xl p-6 border border-amber-200 shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-chart-bar text-amber-600 text-3xl mr-4"></i>
-                        <h3 class="text-xl font-bold text-amber-900">Pruebas No Paramétricas</h3>
-                    </div>
-                    <ul class="space-y-3 text-sm text-slate-700">
-                        <li class="flex items-start"><i class="fas fa-check text-amber-500 mt-1 mr-2"></i> <strong>El supuesto:</strong> Son "libres de distribución". No asumen ni exigen que los datos formen una campana.</li>
-                        <li class="flex items-start"><i class="fas fa-shield-alt text-amber-500 mt-1 mr-2"></i> <strong>Poder Estadístico:</strong> Son un poco menos sensibles para detectar el valor \(p\), pero son inmunes a los valores atípicos (outliers) que arruinarían el estudio.</li>
-                        <li class="flex items-start"><i class="fas fa-ruler text-amber-500 mt-1 mr-2"></i> <strong>Requisitos:</strong> Son la única opción válida para muestras muy pequeñas (\(n < 30\)) o cuando se trabaja con variables Ordinales.</li>
-                    </ul>
-                    <div class="mt-6 p-3 bg-white rounded-lg border border-amber-100 text-xs text-slate-600 flex items-center">
-                        <i class="fas fa-tools text-amber-400 mr-3 text-lg"></i>
-                        <p><strong>Analogía: Una navaja suiza.</strong> Funciona en cualquier terreno (datos asimétricos, ruidosos o pocos), aunque no sea tan "fina" como el láser.</p>
-                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN 6: GUÍA DE PRUEBAS ESTADÍSTICAS -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-slate-100">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 text-center">6. Guía Rápida de Pruebas Estadísticas</h2>
-            <p class="text-slate-600 mb-8 text-center">Seleccionar la prueba correcta depende del alcance de tu investigación, de tus variables y de si tus datos son "normales" (paramétricos) o no (no paramétricos).</p>
+    </div>
+    <div class="image-container">
+        <!-- SVG Equipo HT12 -->
+        <svg class="bleed-image-side" viewBox="0 0 600 720" preserveAspectRatio="xMidYMid slice">
+            <!-- Base table -->
+            <rect x="50" y="600" width="500" height="20" fill="#64748b" />
             
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-slate-600">
-                    <thead class="text-xs text-slate-700 uppercase bg-slate-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">Alcance / Objetivo</th>
-                            <th scope="col" class="px-6 py-3">Prueba Paramétrica<br>(Muestras Gdes/Datos Normales)</th>
-                            <th scope="col" class="px-6 py-3">Prueba No Paramétrica<br>(Muestras Pqñas/No Normales/Ordinales)</th>
-                            <th scope="col" class="px-6 py-3">Ejemplo Sencillo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Descriptivo -->
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Descriptivo / Exploratorio</strong><br>
-                                (Describir 1 variable en 1 grupo)
-                            </td>
-                            <td class="px-6 py-4">
-                                Intervalos de Confianza (Media)
-                            </td>
-                            <td class="px-6 py-4">
-                                Intervalos de Confianza (Mediana)
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿Cuál es el salario promedio de los arquitectos en Bogotá?</em> (Solo describes, no comparas).
-                            </td>
-                        </tr>
+            <!-- HT10X Service Unit -->
+            <rect x="100" y="450" width="400" height="150" rx="10" fill="#0f172a" stroke="#334155" stroke-width="4"/>
+            <rect x="150" y="480" width="100" height="40" rx="4" fill="#020617"/>
+            <text x="200" y="508" fill="#10b981" font-family="monospace" font-size="24" text-anchor="middle">24.0</text>
+            <text x="200" y="540" fill="#64748b" font-family="sans-serif" font-size="12" text-anchor="middle">Voltaje (V)</text>
 
-                        <!-- Explicativo: Comparar 2 grupos independientes -->
-                        <tr class="bg-slate-50 border-b">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Explicativo / Experimental</strong><br>
-                                (Comparar 2 grupos distintos)
-                            </td>
-                            <td class="px-6 py-4">
-                                <strong>Prueba t de Student para muestras independientes</strong>
-                            </td>
-                            <td class="px-6 py-4">
-                                Prueba U de Mann-Whitney
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿El concreto con aditivo A resiste más compresión que el concreto con aditivo B?</em>
-                            </td>
-                        </tr>
+            <rect x="350" y="480" width="100" height="40" rx="4" fill="#020617"/>
+            <text x="400" y="508" fill="#10b981" font-family="monospace" font-size="24" text-anchor="middle">1.52</text>
+            <text x="400" y="540" fill="#64748b" font-family="sans-serif" font-size="12" text-anchor="middle">Flujo (L/min)</text>
+            
+            <!-- HT12 Cylinder -->
+            <rect x="220" y="200" width="160" height="200" fill="#e2e8f0" stroke="#94a3b8" stroke-width="4"/>
+            <ellipse cx="300" cy="200" rx="80" ry="25" fill="#f8fafc" stroke="#94a3b8" stroke-width="4"/>
+            <ellipse cx="300" cy="400" rx="80" ry="25" fill="#94a3b8" />
+            
+            <!-- Insulation/Jacket Details -->
+            <path d="M 240 200 L 240 400" stroke="#cbd5e1" stroke-width="2" />
+            <path d="M 260 200 L 260 400" stroke="#cbd5e1" stroke-width="2" />
+            <path d="M 280 200 L 280 400" stroke="#cbd5e1" stroke-width="2" />
+            <path d="M 320 200 L 320 400" stroke="#cbd5e1" stroke-width="2" />
+            <path d="M 340 200 L 340 400" stroke="#cbd5e1" stroke-width="2" />
+            <path d="M 360 200 L 360 400" stroke="#cbd5e1" stroke-width="2" />
+            
+            <!-- Water lines -->
+            <path d="M 380 350 C 450 350 450 450 420 450" fill="none" stroke="#0ea5e9" stroke-width="6" stroke-dasharray="10,5" />
+            <path d="M 220 250 C 150 250 150 450 180 450" fill="none" stroke="#0ea5e9" stroke-width="6" stroke-dasharray="10,5" />
+            
+            <!-- Thermocouple Wires -->
+            <path d="M 300 200 C 300 150 250 100 250 450" fill="none" stroke="#ef4444" stroke-width="3" />
+            <path d="M 310 205 C 320 150 260 100 250 450" fill="none" stroke="#eab308" stroke-width="3" />
+            <path d="M 320 210 C 340 150 270 100 250 450" fill="none" stroke="#22c55e" stroke-width="3" />
+            <path d="M 290 205 C 280 150 240 100 250 450" fill="none" stroke="#3b82f6" stroke-width="3" />
+        </svg>
+    </div>
+</div>
 
-                        <!-- Explicativo: Comparar el mismo grupo 2 veces -->
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Explicativo / Experimental</strong><br>
-                                (Comparar 1 grupo: Antes vs. Después)
-                            </td>
-                            <td class="px-6 py-4">
-                                <strong>Prueba t de Student para muestras pareadas</strong>
-                            </td>
-                            <td class="px-6 py-4">
-                                Prueba de Rangos con Signo de Wilcoxon
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿Aumentó la productividad de los empleados después del curso de capacitación?</em> (Se evalúa a las mismas personas).
-                            </td>
-                        </tr>
-
-                        <!-- Explicativo: Comparar 3 o más grupos -->
-                        <tr class="bg-slate-50 border-b">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Explicativo / Experimental</strong><br>
-                                (Comparar 3 o más grupos)
-                            </td>
-                            <td class="px-6 py-4">
-                                <strong>ANOVA (Análisis de Varianza)</strong>
-                            </td>
-                            <td class="px-6 py-4">
-                                Prueba de Kruskal-Wallis
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿Cuál de tres métodos de fertilización distintos (A, B o C) produce más rendimiento en cultivos?</em>
-                            </td>
-                        </tr>
-
-                        <!-- Correlacional: Relación entre variables continuas -->
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Correlacional</strong><br>
-                                (Asociación entre 2 variables continuas)
-                            </td>
-                            <td class="px-6 py-4">
-                                <strong>Correlación de Pearson (\(r\))</strong>
-                            </td>
-                            <td class="px-6 py-4">
-                                Correlación de Spearman (\(\rho\))
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿A mayor temperatura ambiente, mayor es el consumo de energía en refrigeración?</em> (Diseño transversal).
-                            </td>
-                        </tr>
-
-                        <!-- Correlacional: Variables categóricas -->
-                        <tr class="bg-slate-50">
-                            <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                <strong>Correlacional</strong><br>
-                                (Asociación entre variables categóricas)
-                            </td>
-                            <td class="px-6 py-4" colspan="2">
-                                <div class="text-center font-semibold">Prueba Chi-cuadrada (\(\chi^2\))</div>
-                                <span class="text-xs text-slate-500 block text-center mt-1">(Se usa con variables Nominales u Ordinales)</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <em>¿Existe relación entre el género del comprador (Hombre/Mujer) y el tipo de vivienda elegida (Casa/Apto)?</em>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<!-- Slide 6: Timeline -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">4. Métodos y <span>Procedimientos</span></h2>
+    <div class="content-area">
+        <div class="timeline-layout">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>1. Inicialización</h3>
+                    <p>Enciende el equipo desde PC, inicia el software y ajusta el flujo de agua de enfriamiento a aproximadamente 1,5 l/min.</p>
+                </div>
             </div>
             
-            <div class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <p class="text-sm text-blue-900">
-                    <i class="fas fa-lightbulb text-amber-500 mr-2"></i><strong>Nota sobre la Población y el Muestreo:</strong> La elección paramétrica vs no paramétrica a menudo se ve forzada por el tamaño de la muestra (\(n\)). Un muestreo probabilístico con una muestra grande (ej. \(n > 30\) por grupo) tiende a normalizarse por el Teorema del Límite Central, permitiendo usar las pruebas paramétricas (más potentes). Si el tamaño poblacional es muy pequeño o el muestreo fue por conveniencia arrojando datos sesgados, usualmente se debe recurrir a las pruebas no paramétricas.
-                </p>
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>2. Estacionario</h3>
+                    <p>Ajusta la tensión de calefacción a 3 valores distintos (por definir durante la práctica). Espera estabilización. Registra <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mn>1</mn></msub></math> a <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mn>6</mn></msub></math>, V, I y Fw.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>3. Transitorio</h3>
+                    <p>Configura muestreo cada 10s por 5000s. Ajusta tensión a un valor de prueba, inicia muestreo y observa cambios en tiempo real.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>4. Cálculos</h3>
+                    <p>Calcula flujo <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>q</mi></math>, temperatura superficial <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mi>o</mi></msub></math> y conductividad <math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>k</mi></math>. Grafica T vs ln(r).</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Image_Right_Text_Left (Results 1) -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">5.1 Resultados: <span>Perfiles de Temperatura</span></h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div style="display: flex; flex-direction: column; height: 100%;">
+                <p><strong>Cálculos y Análisis:</strong> Confirma que cada perfil de temperatura es una curva y que el gradiente en cualquier punto de la curva disminuye al aumentar el radio desde el centro caliente.</p>
+                <div contenteditable="true" class="editable-field" style="flex-grow: 1; margin-top: 15px;" data-placeholder="Escribe tu análisis y confirmación geométrica de las curvas aquí..."></div>
+            </div>
+            <div style="display: flex; flex-direction: column; height: 100%;">
+                <p style="margin-bottom: 10px; font-weight: 600; color: #0284c7;">Pega tu gráfica a continuación:</p>
+                <div class="image-wrapper editable-field" contenteditable="true" style="flex-grow: 1; position: relative;" data-placeholder="Reemplaza esta imagen con tu Gráfica de Temperatura vs Radio (o ln(r))">
+                    <!-- SVG Gráfica Placeholder -->
+                    <svg viewBox="0 0 500 350" width="100%" height="100%" style="opacity:0.5; pointer-events:none;">
+                        <!-- Grid -->
+                        <g stroke="#e2e8f0" stroke-width="1">
+                            <line x1="60" y1="50" x2="450" y2="50" />
+                            <line x1="60" y1="100" x2="450" y2="100" />
+                            <line x1="60" y1="150" x2="450" y2="150" />
+                            <line x1="60" y1="200" x2="450" y2="200" />
+                            <line x1="60" y1="250" x2="450" y2="250" />
+                            <line x1="100" y1="50" x2="100" y2="300" />
+                            <line x1="150" y1="50" x2="150" y2="300" />
+                            <line x1="200" y1="50" x2="200" y2="300" />
+                            <line x1="250" y1="50" x2="250" y2="300" />
+                            <line x1="300" y1="50" x2="300" y2="300" />
+                            <line x1="350" y1="50" x2="350" y2="300" />
+                            <line x1="400" y1="50" x2="400" y2="300" />
+                        </g>
+                        <!-- Axes -->
+                        <polyline points="60,50 60,300 450,300" stroke="#0f172a" stroke-width="3" fill="none"/>
+                        <!-- Curve -->
+                        <path d="M 60 60 Q 150 220 400 260" stroke="#0284c7" stroke-width="4" fill="none"/>
+                        <!-- Data Points -->
+                        <circle cx="60" cy="60" r="5" fill="#ef4444" />
+                        <circle cx="100" cy="120" r="5" fill="#0284c7" />
+                        <circle cx="150" cy="170" r="5" fill="#0284c7" />
+                        <circle cx="200" cy="205" r="5" fill="#0284c7" />
+                        <circle cx="300" cy="240" r="5" fill="#0284c7" />
+                        <circle cx="400" cy="260" r="5" fill="#0284c7" />
+                        <!-- Labels -->
+                        <text x="255" y="340" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="600" fill="#334155">Radio (m)</text>
+                        <text x="30" y="175" transform="rotate(-90 30,175)" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="600" fill="#334155">Temperatura (°C)</text>
+                        <text x="250" y="30" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="600" fill="#94a3b8">Usa esta área para pegar tu gráfica real de Excel</text>
+                    </svg>
+                </div>
             </div>
         </div>
+    </div>
+</div>
 
-    </main>
+<!-- Slide 8: Two_Column_Tiled_Text (Results 2) -->
+<div class="slide-container" id="slide8">
+    <h2 class="slide-title">5.2 Resultados: <span>Análisis de Flujos y T1</span></h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Gradiente vs Flujo Térmico</h3>
+                <p>Confirma que el gradiente de temperatura en cualquier radio aumenta con el incremento del flujo de calor (<math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>q</mi></math>).</p>
+                <div contenteditable="true" class="editable-field" style="flex-grow: 1; margin-top: 15px;" data-placeholder="Argumenta tu respuesta basándote en los datos obtenidos en el laboratorio..."></div>
+            </div>
+            <div>
+                <h3>Comportamiento de T1</h3>
+                <p>Comenta los cambios observados en la temperatura central (<math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><msub><mi>T</mi><mn>1</mn></msub></math>) cuando se cambia el flujo de calor a través del disco.</p>
+                <div contenteditable="true" class="editable-field" style="flex-grow: 1; margin-top: 15px;" data-placeholder="Describe cómo y por qué se altera T1 ante variaciones de voltaje/potencia..."></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <footer class="text-center text-slate-500 text-sm py-8 border-t border-slate-200 mt-12">
-        <p>Material Docente Complementario - Metodología de la Investigación</p>
-        <p class="mt-1 opacity-75">Conceptos adaptados de <i>Metodología de la Investigación</i> (Sampieri) y <i>Practical Research</i> (Leedy).</p>
-    </footer>
+<!-- Slide 9: Table (Results 3) -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">5.3 Resultados: <span>Conductividad Térmica (k)</span></h2>
+    <div class="content-area" style="display:flex; flex-direction:column; gap:25px;">
+        <div class="table-layout">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Tensión (V)</th>
+                        <th style="width: 25%;">Flujo Calor q (W)</th>
+                        <th style="width: 20%;">k (1-6) [W/m·C]</th>
+                        <th style="width: 20%;">k (1-2) [W/m·C]</th>
+                        <th style="width: 20%;">k (5-6) [W/m·C]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 700;"><div contenteditable="true" class="editable-field" data-placeholder="Voltaje 1"></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 700;"><div contenteditable="true" class="editable-field" data-placeholder="Voltaje 2"></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 700;"><div contenteditable="true" class="editable-field" data-placeholder="Voltaje 3"></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                        <td><div contenteditable="true" class="editable-field" data-placeholder="..."></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="width: 100%; display: flex; flex-direction: column; flex-grow: 1;">
+            <p><strong>Análisis y Comparación:</strong> Compara los valores obtenidos para la conductividad térmica (<math xmlns="http://www.w3.org/1998/Math/MathML" style="display: math;"><mi>k</mi></math>) a las diferentes configuraciones de flujo de calor a través del disco. ¿Qué fenómeno físico justifica las variaciones?</p>
+            <div contenteditable="true" class="editable-field" style="flex-grow: 1;" data-placeholder="Escribe la comparación de tus resultados de conductividad térmica aquí..."></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: Styled_Bullet_Points -->
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">6. Referencias <span>Bibliográficas</span></h2>
+    <div class="content-area" style="justify-content: flex-start; margin-top: 20px;">
+        <div class="bullet-list">
+            <ul>
+                <li>
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <strong>CENGEL, Yanus; GHAJAR, Afshin.</strong> Transferencia de Calor y Masa. México: McGraw-Hill, 2011. 920 p.
+                </li>
+                <li>
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <strong>HOLMAN, J.P.</strong> Transferencia de Calor. Madrid: McGraw-Hill, 1999. 484 p.
+                </li>
+                <li>
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <strong>INCROPERA, Frank; DEWITT, David.</strong> Fundamentos de Transferencia de Calor. México: Prentice Hall, 1999. 912 p.
+                </li>
+                <li>
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <strong>KREITH, Frank; MANGLIK, Raj; BOHN, Mark.</strong> Principios de Transferencia de Calor. México: Thomson Learning, 2012. 696 p.
+                </li>
+                <li>
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <strong>CENGEL, Yanus.</strong> Transferencia de Calor. México: McGraw-Hill, 2004. 824 p.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
